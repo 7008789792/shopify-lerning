@@ -1,0 +1,150 @@
+{{ 'section-home-info.css' | asset_url | stylesheet_tag }}
+
+<div class="home-info{% if section.settings.full_width %} home-info--full-width{% endif %}">
+  <div class="page-width">
+    {%- if section.settings.title != blank -%}
+      <h2 class="home-info__heading {{ section.settings.heading_size }}">
+        {{ section.settings.title | escape }}
+      </h2>
+      {%- if section.settings.subtitle != blank -%}
+        <h3 class="home-info__subtitle">
+          {{ section.settings.subtitle | escape }}
+        </h3>
+      {%- endif -%}
+    {%- endif -%}
+
+    <div class="home-info__grid">
+      {%- for block in section.blocks -%}
+        <div class="home-info__item" {{ block.shopify_attributes }}>
+          {%- if block.settings.image != blank -%}
+            <div class="home-info__media">
+              <img
+                srcset="{%- if block.settings.image.width >= 550 -%}{{ block.settings.image | image_url: width: 550 }} 550w,{%- endif -%}
+                  {%- if block.settings.image.width >= 720 -%}{{ block.settings.image | image_url: width: 720 }} 720w,{%- endif -%}
+                  {%- if block.settings.image.width >= 990 -%}{{ block.settings.image | image_url: width: 990 }} 990w,{%- endif -%}
+                  {{ block.settings.image | image_url }} {{ block.settings.image.width }}w"
+                src="{{ block.settings.image | image_url: width: 550 }}"
+                sizes="(min-width: 990px) {% if section.blocks.size <= 2 %}710px{% else %}550px{% endif %},
+                  (min-width: 750px) {% if section.blocks.size == 1 %}710px{% else %}550px{% endif %},
+                  calc(100vw - 30px)"
+                alt="{{ block.settings.image.alt | escape }}"
+                height="{{ block.settings.image.height }}"
+                width="{{ block.settings.image.width }}"
+                loading="lazy"
+              >
+            </div>
+          {%- endif -%}
+          <div class="home-info__content">
+            {%- if block.settings.title != blank -%}
+              <h3 class="home-info__item-title">{{ block.settings.title | escape }}</h3>
+            {%- endif -%}
+            {%- if block.settings.price_text != blank -%}
+              <p class="home-info__price">{{ block.settings.price_text | escape }}</p>
+            {%- endif -%}
+            {%- if block.settings.button_label != blank and block.settings.button_link != blank -%}
+              <a href="{{ block.settings.button_link }}" class="button button--primary">
+                {{ block.settings.button_label | escape }}
+              </a>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom Info",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Transform Your Home with",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "default": "Home Essentials",
+      "label": "Subtitle"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "Small"
+        },
+        {
+          "value": "h1",
+          "label": "Large"
+        }
+      ],
+      "default": "h1",
+      "label": "Heading size"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Product Category",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "KITCHEN TOOLS",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "price_text",
+          "default": "Starting @ ₹699/-",
+          "label": "Price Text"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "default": "Shop Now",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Info",
+      "blocks": [
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %} 

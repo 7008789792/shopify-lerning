@@ -1,0 +1,129 @@
+.home-info {
+    margin-top: 5rem;
+    margin-bottom: 5rem;
+  }
+  
+  .home-info__heading {
+    margin-bottom: 1rem;
+    font-size: calc(var(--font-heading-scale) * 3.2rem);
+    line-height: 1.2;
+    text-align: center;
+  }
+  
+  .home-info__subtitle {
+    margin-top: 0;
+    margin-bottom: 4rem;
+    font-size: calc(var(--font-heading-scale) * 2.4rem);
+    line-height: 1.5;
+    text-align: center;
+    color: rgb(226, 93, 22);
+  }
+  
+  .home-info__grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 3rem;
+    margin: 0 auto;
+    max-width: 140rem;
+  }
+  
+  .home-info__item:nth-child(1),
+  .home-info__item:nth-child(2) {
+    grid-column: span 3;
+  }
+  
+  .home-info__item:nth-child(3),
+  .home-info__item:nth-child(4),
+  .home-info__item:nth-child(5) {
+    grid-column: span 2;
+  }
+  
+  .home-info__item {
+    position: relative;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: var(--gradient-background);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .home-info__item:hover {
+    transform: translateY(-5px);
+  }
+  
+  .home-info__media {
+    position: relative;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+  }
+  
+  .home-info__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .home-info__item:hover .home-info__media img {
+    transform: scale(1.05);
+  }
+  
+  .home-info__content {
+    padding: 1.5rem;
+    text-align: center;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,1));
+  }
+  
+  .home-info__item-title {
+    margin: 0 0 0.5rem;
+    font-size: calc(var(--font-heading-scale) * 1.8rem);
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  .home-info__price {
+    margin: 0 0 1rem;
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: rgb(226, 93, 22);
+  }
+  
+  .home-info .button {
+    display: inline-block;
+    min-width: 12rem;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 2.5rem;
+    font-size: 1.4rem;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    background-color: rgb(226, 93, 22);
+    color: #ffffff;
+    transition: background-color 0.3s ease;
+  }
+  
+  .home-info .button:hover {
+    background-color: rgb(196, 81, 19);
+  }
+  
+  @media screen and (max-width: 749px) {
+    .home-info {
+      margin-top: 3rem;
+      margin-bottom: 3rem;
+    }
+  
+    .home-info__heading {
+      font-size: calc(var(--font-heading-scale) * 2.4rem);
+    }
+  
+    .home-info__subtitle {
+      font-size: calc(var(--font-heading-scale) * 2rem);
+      margin-bottom: 3rem;
+    }
+  
+    .home-info__grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  } 

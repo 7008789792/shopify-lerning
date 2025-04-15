@@ -1330,3 +1330,36 @@ class CartPerformance {
     );
   }
 }
+
+// Open the navigation menu items on hover
+let menuItems = document.querySelector(".header__inline-menu").querySelectorAll("details");
+
+menuItems.forEach(menuItem => {
+  let timeoutId;
+
+  menuItem.addEventListener("mouseover", () => {
+    clearTimeout(timeoutId); // Clear any existing timeout
+    menuItem.setAttribute("open", true);
+  });
+
+  menuItem.addEventListener("mouseleave", () => {
+    // Add a slight delay before closing the menu to allow for movement to the dropdown
+    timeoutId = setTimeout(() => {
+      if (!menuItem.querySelector("ul:hover")) {
+        menuItem.removeAttribute("open");
+      }
+    }, 100); // Adjust the delay as needed
+  });
+
+  // Ensure the dropdown menu stays open when hovered
+  menuItem.querySelector("ul").addEventListener("mouseover", () => {
+    clearTimeout(timeoutId); // Clear the timeout when hovering over the dropdown
+  });
+
+  menuItem.querySelector("ul").addEventListener("mouseleave", () => {
+    // Close the menu when leaving the dropdown
+    timeoutId = setTimeout(() => {
+      menuItem.removeAttribute("open");
+    }, 100); // Adjust the delay as needed
+  });
+});

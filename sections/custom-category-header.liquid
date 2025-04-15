@@ -1,0 +1,156 @@
+{%- style -%}
+.collections-header {
+  padding: 30px 0;
+  background: {{ section.settings.background_color }};
+}
+
+.collections-header__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  justify-items: center;
+  padding: 0 20px;
+}
+
+@media screen and (max-width: 749px) {
+  .collections-header__grid {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 0 20px;
+    padding: 0 20px;
+    gap: 20px;
+    grid-template-columns: none;
+  }
+
+  .collection-item {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    width: 120px;
+  }
+}
+
+.collection-item {
+  text-align: center;
+  text-decoration: none;
+  color: {{ section.settings.text_color }};
+  transition: transform 0.3s ease;
+}
+
+.collection-item:hover {
+  transform: translateY(-5px);
+}
+
+.collection-item__image-wrapper {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 10px;
+}
+
+.collection-item__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.collection-item:hover .collection-item__image {
+  transform: scale(1.1);
+}
+
+.collection-item__title {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+}
+{%- endstyle -%}
+
+<div class="collections-header page-width">
+  {% comment %} {% if section.settings.title != blank %}
+    <h2 class="collections-header__heading text-center">
+      {{ section.settings.title | escape }}
+    </h2>
+  {% endif %} {% endcomment %}
+  
+  <div class="collections-header__grid">
+    {%- for block in section.blocks -%}
+      {% if block.settings.collection != blank %}
+        <a href="{{ block.settings.collection.url }}" class="collection-item">
+          <div class="collection-item__image-wrapper">
+            {%- if block.settings.collection.image != blank -%}
+              {{ block.settings.collection.image | image_url: width: 200 | image_tag:
+                loading: 'lazy',
+                class: 'collection-item__image',
+                alt: block.settings.collection.title
+              }}
+            {%- else -%}
+              {{ 'collection-1' | placeholder_svg_tag: 'collection-item__image placeholder' }}
+            {%- endif -%}
+          </div>
+          <h3 class="collection-item__title">{{ block.settings.collection.title }}</h3>
+        </a>
+      {% endif %}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collections Header",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Shop by Category"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1a1a1a"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom category",
+      "blocks": [
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %} 

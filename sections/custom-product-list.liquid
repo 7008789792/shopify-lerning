@@ -1,0 +1,445 @@
+{% style %}
+  .cpl-container {
+    padding: 20px 100px;
+    background-color: #f8f9f9;
+  }
+
+  .cpl-product-list {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+  }
+
+  .cpl-product-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 4px;
+    border-radius: 12px;
+    background-color: #fff;
+    margin: 4px;
+    background-color: #f8f9f9;
+  }
+
+  .cpl-product-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 2px;
+  }
+
+  .cpl-product-item h2 {
+    font-size: 14px;
+    font-weight: normal;
+    text-align: center;
+    color: #333;
+    margin: 2px 0;
+  }
+
+  .cpl-price {
+    font-size: 16px;
+    color: #e74c3c;
+    font-weight: bold;
+    margin: 2px 0;
+  }
+
+  .cpl-discounted-price {
+    font-size: 14px;
+    color: #999;
+    text-decoration: line-through;
+    margin-left: 5px;
+  }
+
+  .cpl-add-to-cart {
+    width: 180px;
+    background-color: #e8dacf;
+    border: 1px solid #bd8556;
+    color: #723400;
+    padding: 8px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    margin-top: 2px;
+    position: relative;
+  }
+
+  .cpl-add-to-cart:hover {
+    background-color: #e74c3c;
+    color: #fff;
+  }
+
+  .cpl-add-to-cart.loading {
+    opacity: 0.7;
+    cursor: wait;
+  }
+
+  .cpl-add-to-cart.loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin: -8px 0 0 -8px;
+    border: 2px solid transparent;
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: button-loading-spinner 0.6s linear infinite;
+  }
+
+  @keyframes button-loading-spinner {
+    from {
+      transform: rotate(0turn);
+    }
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  .cpl-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 14px;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .cpl-message.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .cpl-message.success {
+    background-color: #4CAF50;
+  }
+
+  .cpl-message.error {
+    background-color: #f44336;
+  }
+
+  .cpl-header {
+    margin: 10px auto;
+    padding: 0 20px;
+  }
+
+  .cpl-header h1 {
+    font-size: {{ section.settings.heading_size }}px;
+    color: {{ section.settings.heading_color }};
+    margin: 0;
+    padding: 0;
+  }
+
+  .cpl-header p {
+    font-size: {{ section.settings.subheading_size }}px;
+    color: {{ section.settings.subheading_color }};
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Splide Custom Styles */
+  #product-splide-{{ section.id }} {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+  }
+
+  #product-splide-{{ section.id }} .splide__arrow {
+    background: #fff;
+    border: 1px solid #723400;
+    opacity: 0;
+    visibility: hidden;
+    width: 40px;
+    height: 40px;
+    transition: opacity 0.3s ease, visibility 0.3s ease, background-color 0.3s ease;
+  }
+
+  #product-splide-{{ section.id }}:hover .splide__arrow {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  #product-splide-{{ section.id }} .splide__arrow svg {
+    fill: #723400;
+    width: 1.2em;
+    height: 1.2em;
+  }
+
+  #product-splide-{{ section.id }} .splide__arrow:hover {
+    background: #723400;
+  }
+
+  #product-splide-{{ section.id }} .splide__arrow:hover svg {
+    fill: #fff;
+  }
+
+  #product-splide-{{ section.id }} .splide__arrow:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  #product-splide-{{ section.id }} .splide__pagination__page {
+    background: #ddd;
+  }
+
+  #product-splide-{{ section.id }} .splide__pagination__page.is-active {
+    background: #723400;
+  }
+{% endstyle %}
+
+<div class="cpl-container">
+  <div class="cpl-header">
+    <h1>{{ section.settings.title | replace: '[highlight]', '<span style="color: #e74c3c;">' | replace: '[/highlight]', '</span>' }}</h1>
+    {% if section.settings.subheading != blank %}
+      <p>{{ section.settings.subheading }}</p>
+    {% endif %}
+  </div>
+
+  {%- if section.settings.collection != blank -%}
+    <div class="splide" id="product-splide-{{ section.id }}">
+      <div class="splide__track">
+        <ul class="splide__list cpl-product-list">
+          {%- for product in section.settings.collection.products limit: section.settings.products_to_show -%}
+            <li class="splide__slide">
+              <div class="cpl-product-item">
+                {%- if product.featured_image != blank -%}
+                  <img
+                    src="{{ product.featured_image | image_url: width: 533 }}"
+                    alt="{{ product.title }}"
+                    width="533"
+                    height="533"
+                    loading="lazy"
+                  >
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder' }}
+                {%- endif -%}
+
+                <h2>{{ product.title }}</h2>
+
+                <div>
+                  <span class="cpl-price">{{ product.price | money }}</span>
+                  {%- if product.compare_at_price > product.price -%}
+                    <span class="cpl-discounted-price">{{ product.compare_at_price | money }}</span>
+                  {%- endif -%}
+                </div>
+
+                {%- form 'product', product -%}
+                  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                  <button
+                    type="submit"
+                    name="add"
+                    class="cpl-add-to-cart"
+                    data-product-id="{{ product.id }}"
+                    {% unless product.available %}
+                      disabled
+                    {% endunless %}
+                  >
+                    {%- if product.available -%}
+                      Add to cart
+                    {%- else -%}
+                      Sold out
+                    {%- endif -%}
+                  </button>
+                {%- endform -%}
+              </div>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  {%- else -%}
+    <div class="cpl-empty">
+      <p>Please select a collection to display products.</p>
+    </div>
+  {%- endif -%}
+</div>
+
+<div id="cpl-message" class="cpl-message"></div>
+
+<!-- Load Splide CSS and JS from CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js" defer></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Initialize Splide
+    new Splide('#product-splide-{{ section.id }}', {
+      perPage: 5,
+      perMove: 1,
+      gap: '0.5rem',
+      arrows: true,
+      pagination: false,
+      breakpoints: {
+        1200: {
+          perPage: 4,
+        },
+        992: {
+          perPage: 3,
+        },
+        768: {
+          perPage: 2,
+        },
+        576: {
+          perPage: 1,
+        },
+      },
+    }).mount();
+
+    const messageElement = document.getElementById('cpl-message');
+
+    function showMessage(message, type) {
+      messageElement.textContent = message;
+      messageElement.className = `cpl-message ${type} show`;
+      setTimeout(() => {
+        messageElement.className = 'cpl-message';
+      }, 3000);
+    }
+
+    async function openAndUpdateCartDrawer() {
+      try {
+        const res = await fetch(`${window.Shopify.routes.root}?sections=cart-drawer`);
+        const data = await res.json();
+
+        const parser = new DOMParser();
+        const cartDrawerHTML = parser.parseFromString(data['cart-drawer'], 'text/html');
+        const newDrawer = cartDrawerHTML.querySelector('cart-drawer');
+
+        const currentDrawer = document.querySelector('cart-drawer');
+        if (newDrawer && currentDrawer) {
+          currentDrawer.replaceWith(newDrawer);
+          // Wait a moment to ensure new drawer is in DOM before opening
+          setTimeout(() => {
+            newDrawer.open();
+          }, 50);
+        }
+      } catch (error) {
+        console.error('Failed to update cart drawer:', error);
+      }
+    }
+
+    document.querySelectorAll('.cpl-add-to-cart').forEach((button) => {
+      button.addEventListener('click', async (e) => {
+        e.preventDefault();
+
+        if (button.disabled) return;
+
+        const form = button.closest('form');
+        const variantId = form.querySelector('input[name="id"]').value;
+
+        button.classList.add('loading');
+
+        try {
+          const response = await fetch('/cart/add.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              items: [
+                {
+                  id: variantId,
+                  quantity: 1,
+                },
+              ],
+            }),
+          });
+
+          if (!response.ok) throw new Error('Network response was not ok');
+
+          showMessage('Added to cart successfully!', 'success');
+
+          await openAndUpdateCartDrawer();
+        } catch (error) {
+          console.error('Error:', error);
+          showMessage('Failed to add to cart. Please try again.', 'error');
+        } finally {
+          button.classList.remove('loading');
+        }
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Custom Product List",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Deals of the [Day]"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Browse the best of our favorite sale styles and brands."
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 32
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Subheading size",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#666666"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Select Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 4,
+      "max": 12,
+      "step": 2,
+      "default": 8,
+      "label": "Number of products to show"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Product List",
+      "category": "Products"
+    }
+  ]
+}
+{% endschema %}

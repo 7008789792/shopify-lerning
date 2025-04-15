@@ -77,8 +77,13 @@
 </style>
 
 {%- style -%}
-  .header {
+.header {
     padding: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px 3rem {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px 3rem;
+    {% if section.settings.justify_header %}
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    {% endif %}
   }
 
   .section-header {
@@ -472,6 +477,12 @@
   "class": "section-header",
   "max_blocks": 3,
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "justify_header",
+      "default": false,
+      "label": "Justify header content"
+    },
     {
       "type": "select",
       "id": "logo_position",
