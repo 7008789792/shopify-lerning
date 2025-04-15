@@ -148,6 +148,75 @@
         "slider_speed": 5
       }
     },
+    "custom_info_tVYxxy": {
+      "type": "custom-info",
+      "blocks": {
+        "column_8wJamA": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/banner_1.webp",
+            "title": "KITCHEN TOOLS",
+            "price_text": "Starting @ ₹699/-",
+            "button_label": "Shop Now",
+            "button_link": ""
+          }
+        },
+        "column_DjeUUR": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/banner_2.webp",
+            "title": "KITCHEN TOOLS",
+            "price_text": "Starting @ ₹699/-",
+            "button_label": "Shop Now",
+            "button_link": ""
+          }
+        },
+        "column_DXzjeY": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/product7.webp",
+            "title": "KITCHEN TOOLS",
+            "price_text": "Starting @ ₹699/-",
+            "button_label": "Shop Now",
+            "button_link": ""
+          }
+        },
+        "column_fTXfmA": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/product1.webp",
+            "title": "KITCHEN TOOLS",
+            "price_text": "Starting @ ₹699/-",
+            "button_label": "Shop Now",
+            "button_link": ""
+          }
+        },
+        "column_9weUJM": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/product3.webp",
+            "title": "KITCHEN TOOLS",
+            "price_text": "Starting @ ₹699/-",
+            "button_label": "Shop Now",
+            "button_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "column_8wJamA",
+        "column_DjeUUR",
+        "column_DXzjeY",
+        "column_fTXfmA",
+        "column_9weUJM"
+      ],
+      "name": "Custom Info",
+      "settings": {
+        "title": "Transform Your Home with",
+        "subtitle": "Home Essentials",
+        "heading_size": "h1",
+        "full_width": false
+      }
+    },
     "custom_product_list_zRLz6V": {
       "type": "custom-product-list",
       "name": "Custom Product List",
@@ -167,6 +236,7 @@
     "image_banner",
     "featured_collection",
     "custom_slider_yQU6yP",
+    "custom_info_tVYxxy",
     "custom_product_list_zRLz6V"
   ]
 }
