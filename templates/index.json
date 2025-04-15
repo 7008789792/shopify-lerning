@@ -147,11 +147,26 @@
         "show_text_below": true,
         "slider_speed": 5
       }
+    },
+    "custom_product_list_zRLz6V": {
+      "type": "custom-product-list",
+      "name": "Custom Product List",
+      "settings": {
+        "title": "Deals of the [Day]",
+        "subheading": "Browse the best of our favorite sale styles and brands.",
+        "heading_size": 32,
+        "heading_color": "#333333",
+        "subheading_size": 18,
+        "subheading_color": "#666666",
+        "collection": "cooker",
+        "products_to_show": 8
+      }
     }
   },
   "order": [
     "image_banner",
     "featured_collection",
-    "custom_slider_yQU6yP"
+    "custom_slider_yQU6yP",
+    "custom_product_list_zRLz6V"
   ]
 }
