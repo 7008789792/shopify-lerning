@@ -54,10 +54,59 @@
         "padding_top": 20,
         "padding_bottom": 20
       }
+    },
+    "custom_category_header_TGeM8h": {
+      "type": "custom-category-header",
+      "blocks": {
+        "collection_4E7qJN": {
+          "type": "collection",
+          "settings": {
+            "collection": "cooker"
+          }
+        },
+        "collection_VCHN7E": {
+          "type": "collection",
+          "settings": {
+            "collection": "automated-collection"
+          }
+        },
+        "collection_Unjefy": {
+          "type": "collection",
+          "settings": {
+            "collection": "cooker"
+          }
+        },
+        "collection_DPyLwD": {
+          "type": "collection",
+          "settings": {
+            "collection": "t-shirt"
+          }
+        },
+        "collection_FzeCeq": {
+          "type": "collection",
+          "settings": {
+            "collection": "cooker"
+          }
+        }
+      },
+      "block_order": [
+        "collection_4E7qJN",
+        "collection_VCHN7E",
+        "collection_Unjefy",
+        "collection_DPyLwD",
+        "collection_FzeCeq"
+      ],
+      "name": "Custom category",
+      "settings": {
+        "title": "Shop by Category",
+        "background_color": "#ffffff",
+        "text_color": "#1a1a1a"
+      }
     }
   },
   "order": [
     "announcement-bar",
-    "header"
+    "header",
+    "custom_category_header_TGeM8h"
   ]
 }
