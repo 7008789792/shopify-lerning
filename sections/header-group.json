@@ -42,7 +42,7 @@
           "type": "menu_item_image",
           "settings": {
             "menu_level": "grandchild",
-            "menu_title": "",
+            "menu_title": "cooker",
             "menu_image": "shopify://shop_images/product5_75927f15-adc8-46fa-b796-b43009a034a3.webp",
             "image_width": 150
           }
