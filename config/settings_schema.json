@@ -1451,5 +1451,35 @@
         "default": "scheme-1"
       }
     ]
+  },
+  {
+    "name": "Shipping Bar",
+    "settings":
+    [
+      {
+        "type": "checkbox",
+        "id": "show_shipping_bar",
+        "label": "Show Shipping Bar in Cart Drawer",
+        "default": false
+      },
+      {
+        "type": "number",
+        "id": "minimum_free_shipping",
+        "label": "Minimum Free Shipping",
+        "default": 20
+      },
+      {
+        "type": "color",
+        "id": "shipping_bar_color",
+        "label": "Progress Bar Color",
+        "default": "#0546e0"
+      },
+      {
+        "type": "product",
+        "id": "free_gift_product",
+        "label": "Free Gift Product",
+        "info": "This product will be added as a free gift when cart total reaches minimum free shipping"
+      }
+    ]
   }
 ]
