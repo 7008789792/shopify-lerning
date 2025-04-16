@@ -475,7 +475,7 @@
 {
   "name": "t:sections.header.name",
   "class": "section-header",
-  "max_blocks": 3,
+  "max_blocks": 20,
   "settings": [
     {
       "type": "checkbox",
@@ -663,6 +663,50 @@
   "blocks": [
     {
       "type": "@app"
+    },
+    {
+      "type": "menu_item_image",
+      "name": "Menu Item Image",
+      "limit": 20,
+      "settings": [
+        {
+          "type": "select",
+          "id": "menu_level",
+          "label": "Menu Level",
+          "options": [
+            {
+              "value": "parent",
+              "label": "Parent Menu Item"
+            },
+            {
+              "value": "grandchild",
+              "label": "Grandchild Menu Item"
+            }
+          ],
+          "default": "parent"
+        },
+        {
+          "type": "text",
+          "id": "menu_title",
+          "label": "Menu Item Title",
+          "info": "Enter the exact title of the menu item"
+        },
+        {
+          "type": "image_picker",
+          "id": "menu_image",
+          "label": "Menu Item Image"
+        },
+        {
+          "type": "range",
+          "id": "image_width",
+          "label": "Image Width",
+          "min": 50,
+          "max": 300,
+          "step": 10,
+          "unit": "px",
+          "default": 150
+        }        
+      ]
     }
   ]
 }

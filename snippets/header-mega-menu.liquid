@@ -44,21 +44,63 @@
                           aria-current="page"
                         {% endif %}
                       >
-                        {{ childlink.title | escape }}
+                        {%- liquid
+                          assign menu_image = null
+                          for block in section.blocks
+                            if block.type == 'menu_item_image' and block.settings.menu_level == 'parent' and block.settings.menu_title == childlink.title and block.settings.menu_image != blank
+                              assign menu_image = block.settings.menu_image
+                              break
+                            endif
+                          endfor
+                        -%}
+                        {%- if menu_image != blank -%}
+                          <div class="mega-menu__image-wrapper">
+                            {{
+                              menu_image
+                              | image_url: width: 200
+                              | image_tag: loading: 'lazy', width: 200, height: 200, class: 'mega-menu__image'
+                            }}
+                          </div>
+                        {%- endif -%}
+                        <span class="mega-menu__title">{{ childlink.title | escape }}</span>
                       </a>
                       {%- if childlink.links != blank -%}
-                        <ul class="list-unstyled" role="list">
+                        <ul class="list-unstyled mega-menu__grandchild-list" role="list">
                           {%- for grandchildlink in childlink.links -%}
                             <li>
                               <a
                                 id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}-{{ grandchildlink.handle }}"
                                 href="{{ grandchildlink.url }}"
-                                class="mega-menu__link link{% if grandchildlink.current %} mega-menu__link--active{% endif %}"
+                                class="mega-menu__link mega-menu__link--grandchild link{% if grandchildlink.current %} mega-menu__link--active{% endif %}"
                                 {% if grandchildlink.current %}
                                   aria-current="page"
                                 {% endif %}
                               >
-                                {{ grandchildlink.title | escape }}
+                                {%- liquid
+                                  assign grandchild_image = null
+                                  for block in section.blocks
+                                    if block.type == 'menu_item_image' and block.settings.menu_level == 'grandchild' and block.settings.menu_title == grandchildlink.title and block.settings.menu_image != blank
+                                      assign grandchild_image = block.settings.menu_image
+                                      break
+                                    endif
+                                  endfor
+                                -%}
+                                <span class="mega-menu__title mega-menu__title--grandchild">
+                                  {{- grandchildlink.title | escape -}}
+                                </span>
+                                {%- if grandchild_image != blank -%}
+                                  <div class="mega-menu__image-wrapper mega-menu__image-wrapper--grandchild">
+                                    {{
+                                      grandchild_image
+                                      | image_url: width: 200
+                                      | image_tag:
+                                        loading: 'lazy',
+                                        width: 200,
+                                        height: 200,
+                                        class: 'mega-menu__image mega-menu__image--grandchild'
+                                    }}
+                                  </div>
+                                {%- endif -%}
                               </a>
                             </li>
                           {%- endfor -%}
