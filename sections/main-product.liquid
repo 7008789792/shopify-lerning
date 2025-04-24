@@ -464,6 +464,10 @@
               {%- when 'variant_picker' -%}
                 {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
               {%- when 'buy_buttons' -%}
+                <div class="product-form__input product-form__input-line-item">
+                  <label for="line-item-property">Custom Property</label>
+                  <input type="text" id="line-item-property" name="properties[Custom Property]" placeholder="Enter custom property">
+                </div>
                 {%- render 'buy-buttons',
                   block: block,
                   product: product,

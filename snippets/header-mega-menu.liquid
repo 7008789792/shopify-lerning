@@ -34,7 +34,7 @@
                   class="mega-menu__list page-width{% if link.levels == 1 %} mega-menu__list--condensed{% endif %}"
                   role="list"
                 >
-                  {%- for childlink in link.links -%}
+                  {%- for childlink in link.links limit: 9 -%}
                     <li>
                       <a
                         id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}"
@@ -57,8 +57,8 @@
                           <div class="mega-menu__image-wrapper">
                             {{
                               menu_image
-                              | image_url: width: 200
-                              | image_tag: loading: 'lazy', width: 200, height: 200, class: 'mega-menu__image'
+                              | image_url: width: 50
+                              | image_tag: loading: 'lazy', width: 50, height: 50, class: 'mega-menu__image'
                             }}
                           </div>
                         {%- endif -%}
@@ -85,22 +85,22 @@
                                     endif
                                   endfor
                                 -%}
-                                <span class="mega-menu__title mega-menu__title--grandchild">
-                                  {{- grandchildlink.title | escape -}}
-                                </span>
                                 {%- if grandchild_image != blank -%}
                                   <div class="mega-menu__image-wrapper mega-menu__image-wrapper--grandchild">
                                     {{
                                       grandchild_image
-                                      | image_url: width: 200
+                                      | image_url: width: 50
                                       | image_tag:
                                         loading: 'lazy',
-                                        width: 200,
-                                        height: 200,
+                                        width: 50,
+                                        height: 50,
                                         class: 'mega-menu__image mega-menu__image--grandchild'
                                     }}
                                   </div>
                                 {%- endif -%}
+                                <span class="mega-menu__title mega-menu__title--grandchild">
+                                  {{- grandchildlink.title | escape -}}
+                                </span>
                               </a>
                             </li>
                           {%- endfor -%}

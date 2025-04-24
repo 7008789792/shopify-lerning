@@ -77,32 +77,32 @@
 </style>
 
 {%- style -%}
-.header {
-    padding: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px 3rem {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px 3rem;
-    {% if section.settings.justify_header %}
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    {% endif %}
-  }
+  .header {
+      padding: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px 3rem {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px 3rem;
+      {% if section.settings.justify_header %}
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      {% endif %}
+    }
 
-  .section-header {
-    position: sticky; /* This is for fixing a Safari z-index issue. PR #2147 */
-    margin-bottom: {{ section.settings.margin_bottom | times: 0.75 | round: 0 }}px;
-  }
-
-  @media screen and (min-width: 750px) {
     .section-header {
-      margin-bottom: {{ section.settings.margin_bottom }}px;
+      position: sticky; /* This is for fixing a Safari z-index issue. PR #2147 */
+      margin-bottom: {{ section.settings.margin_bottom | times: 0.75 | round: 0 }}px;
     }
-  }
 
-  @media screen and (min-width: 990px) {
-    .header {
-      padding-top: {{ section.settings.padding_top }}px;
-      padding-bottom: {{ section.settings.padding_bottom }}px;
+    @media screen and (min-width: 750px) {
+      .section-header {
+        margin-bottom: {{ section.settings.margin_bottom }}px;
+      }
     }
-  }
+
+    @media screen and (min-width: 990px) {
+      .header {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
 {%- endstyle -%}
 
 <script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
@@ -667,7 +667,7 @@
     {
       "type": "menu_item_image",
       "name": "Menu Item Image",
-      "limit": 20,
+      "limit": 9,
       "settings": [
         {
           "type": "select",
@@ -705,7 +705,13 @@
           "step": 10,
           "unit": "px",
           "default": 150
-        }        
+        },
+        {
+          "type": "checkbox",
+          "id": "show_image",
+          "label": "Show Image",
+          "default": true
+        }
       ]
     }
   ]
