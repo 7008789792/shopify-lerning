@@ -38,18 +38,19 @@
     "header": {
       "type": "header",
       "blocks": {
-        "menu_item_image_qDhLQQ": {
+        "menu_item_image_mJekqX": {
           "type": "menu_item_image",
           "settings": {
-            "menu_level": "grandchild",
-            "menu_title": "cooker",
-            "menu_image": "shopify://shop_images/product5_75927f15-adc8-46fa-b796-b43009a034a3.webp",
-            "image_width": 150
+            "menu_level": "parent",
+            "menu_title": "Multi-Purpose Plastic Food Storage Container with Lid",
+            "menu_image": "shopify://shop_images/product3.webp",
+            "image_width": 220,
+            "show_image": true
           }
         }
       },
       "block_order": [
-        "menu_item_image_qDhLQQ"
+        "menu_item_image_mJekqX"
       ],
       "settings": {
         "justify_header": true,
