@@ -1,0 +1,310 @@
+{% comment %}
+Fresh Arrivals Section with Collection Tabs and Product Carousel
+Classes and IDs made unique to avoid conflicts with other Splide implementations
+{% endcomment %}
+{{ 'https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css' | stylesheet_tag }}
+
+<div class="fa-wrapper">
+    <div class="fa-container mx-auto">
+      <h1 class="fa-title">FRESH ARRIVALS</h1>
+  
+      <!-- Collection Tabs -->
+      <div class="fa-tabs-container">
+        <div class="fa-tabs">
+          {% for collection in collections %}
+            {% if collection.metafields.fresh_arrivals.show_in_fresh_arrivals == true %}
+              <button class="fa-tab {% if forloop.first %}fa-active-tab{% endif %}" 
+                      data-fa-collection="{{ collection.handle }}">
+                {{ collection.title }}
+              </button>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+  
+      <!-- Product Carousels -->
+      {% for collection in collections %}
+        {% if collection.metafields.fresh_arrivals.show_in_fresh_arrivals == true %}
+          <div id="fa-products-{{ collection.handle }}" class="fa-product-carousel {% unless forloop.first %}hidden{% endunless %}">
+            <div class="fa-splide splide" id="fa-splide-{{ collection.handle }}">
+              <div class="splide__track">
+                <ul class="splide__list">
+                  {% for product in collection.products limit: 12 %}
+                    <li class="splide__slide">
+                      <div class="fa-product-card">
+                        <div class="fa-product-image-container">
+                          <a href="{{ product.url }}">
+                            <img src="{{ product.featured_image | img_url: '500x600', crop: 'center' }}" 
+                                 alt="{{ product.title }}" 
+                                 class="fa-product-image">
+                          </a>
+                          <button class="fa-wishlist-button">
+                            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
+                              2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 
+                              3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 
+                              3.78-3.4 6.86-8.55 11.54L12 21.35z" 
+                              fill="none" stroke="currentColor" stroke-width="1.5"></path>
+                            </svg>
+                          </button>
+                        </div>
+                        <div class="fa-product-info">
+                          <h3 class="fa-product-title">{{ product.title }}</h3>
+                          <div class="fa-product-price">
+                            {% if product.compare_at_price > product.price %}
+                              <span class="fa-sale-price">{{ product.price | money }}</span>
+                              <span class="fa-compare-price">{{ product.compare_at_price | money }}</span>
+                            {% else %}
+                              <span>{{ product.price | money }}</span>
+                            {% endif %}
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+  
+              <div class="splide__arrows">
+                <button class="splide__arrow splide__arrow--prev">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                  </svg>
+                </button>
+                <button class="splide__arrow splide__arrow--next">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                  </svg>
+                </button>
+              </div>
+  
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+  
+  <style>
+    .fa-wrapper {
+      padding: 20px 0 40px;
+      background-color: #fff;
+      max-width: 100%;
+      overflow: hidden;
+    }
+  
+    .fa-title {
+      font-size: 36px;
+      font-weight: 600;
+      text-align: center;
+      margin: 30px 0;
+      color: #333;
+      text-transform: uppercase;
+    }
+  
+    .fa-tabs-container {
+      border-bottom: 1px solid #e2e2e2;
+      margin-bottom: 30px;
+    }
+  
+    .fa-tabs {
+      display: flex;
+      justify-content: center;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      max-width: 100%;
+    }
+  
+    .fa-tab {
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 400;
+      color: #666;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+  
+    .fa-tab:hover {
+      color: #333;
+    }
+  
+    .fa-active-tab {
+      color: #000;
+      font-weight: 500;
+      border-bottom: 2px solid #000;
+    }
+  
+    .fa-product-carousel {
+      position: relative;
+      padding: 0 15px;
+    }
+  
+    .fa-product-image-container {
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+  
+    .fa-product-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+  
+    .fa-product-card:hover .fa-product-image {
+      transform: scale(1.05);
+    }
+  
+    .fa-wishlist-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: #444;
+      opacity: 0.8;
+      padding: 4px;
+      z-index: 10;
+    }
+  
+    .fa-wishlist-button:hover {
+      opacity: 1;
+    }
+  
+    .fa-product-info {
+      padding: 5px 0;
+    }
+  
+    .fa-product-title {
+      font-size: 14px;
+      font-weight: 500;
+      margin: 0 0 5px;
+      color: #333;
+    }
+  
+    .fa-product-price {
+      font-size: 14px;
+    }
+  
+    .fa-sale-price {
+      color: #e32c2b;
+      font-weight: 500;
+    }
+  
+    .fa-compare-price {
+      text-decoration: line-through;
+      color: #999;
+      margin-left: 5px;
+    }
+  
+    /* Keeping splide arrow defaults but updating selectors for specificity */
+    .fa-splide .splide__arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      border: 1px solid #eee;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  
+    .fa-splide .splide__arrow--prev {
+      left: -5px;
+    }
+  
+    .fa-splide .splide__arrow--next {
+      right: -5px;
+    }
+  
+    .fa-splide .splide__arrow svg {
+      width: 20px;
+      height: 20px;
+      fill: #666;
+    }
+  
+    .hidden {
+      display: none !important;
+    }
+  
+    @media (max-width: 768px) {
+      .fa-tabs {
+        justify-content: flex-start;
+      }
+  
+      .fa-product-carousel .splide__slide:nth-child(n+3) {
+        display: none;
+      }
+    }
+  </style>
+  
+  <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize Splide carousels with unique selectors
+      var faCarousels = document.querySelectorAll('.fa-splide');
+      if (faCarousels.length > 0) {
+        faCarousels.forEach(function(carousel) {
+          new Splide(carousel, {
+            type: 'slide',
+            perPage: 4,
+            perMove: 1,
+            gap: '20px',
+            pagination: false,
+            autoplay: false,
+            arrows: true,
+            breakpoints: {
+              1200: { perPage: 3 },
+              768: { perPage: 2 },
+              480: { perPage: 1 }
+            }
+          }).mount();
+        });
+      }
+  
+      // Tab switching with unique selectors
+      var faTabs = document.querySelectorAll('.fa-tab');
+      var faProductCarousels = document.querySelectorAll('.fa-product-carousel');
+  
+      if (faTabs.length > 0) {
+        faTabs.forEach(function(tab) {
+          tab.addEventListener('click', function() {
+            // Remove active class from all tabs
+            faTabs.forEach(function(t) {
+              t.classList.remove('fa-active-tab');
+            });
+            
+            // Add active class to clicked tab
+            this.classList.add('fa-active-tab');
+  
+            // Show corresponding carousel
+            var collectionHandle = this.getAttribute('data-fa-collection');
+            
+            // Hide all carousels
+            faProductCarousels.forEach(function(carousel) {
+              carousel.classList.add('hidden');
+            });
+            
+            // Show selected carousel
+            var targetCarousel = document.getElementById('fa-products-' + collectionHandle);
+            if (targetCarousel) {
+              targetCarousel.classList.remove('hidden');
+            }
+          });
+        });
+      }
+    });
+  </script>

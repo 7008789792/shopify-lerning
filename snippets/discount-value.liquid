@@ -1,0 +1,147 @@
+{% comment %}
+  First, create a snippet file called discount-value.liquid with this content:
+{% endcomment %}
+
+{% if discount_code == "htman45" %}
+    {% assign discount_value = "100%" %}
+  {% elsif discount_code == "summer50" %}
+    {% assign discount_value = "50%" %}
+  {% elsif discount_code == "winter25" %}
+    {% assign discount_value = "25%" %}
+  {% else %}
+    {% assign discount_value = "" %}
+  {% endif %}
+  
+  {% comment %}
+    Then in your product.liquid template, add this code:
+  {% endcomment %}
+  
+  {% assign has_coupon = false %}
+  {% assign coupon_code = "" %}
+  
+  {% for collection in product.collections %}
+    {% if collection.metafields.custom.coupon_code != blank %}
+      {% assign has_coupon = true %}
+      {% assign coupon_code = collection.metafields.custom.coupon_code %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+  
+  {% if has_coupon %}
+    {% assign discount_code = coupon_code %}
+    {% render 'discount-value' %}
+    
+    <div class="coupon-container">
+      <h3>Special Offer {% if discount_value != blank %}- {{ discount_value }} OFF{% endif %}</h3>
+      <div class="coupon-box">
+        <span id="coupon-text">{{ coupon_code }}</span>
+        <button class="copy-coupon" id="copy-button">Copy</button>
+      </div>
+      <p class="coupon-message" id="copy-message">
+        Use this code at checkout{% if discount_value != blank %} for {{ discount_value }} off{% endif %}!
+      </p>
+    </div>
+  
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var copyButton = document.getElementById('copy-button');
+        var couponText = document.getElementById('coupon-text');
+        var message = document.getElementById('copy-message');
+        
+        copyButton.addEventListener('click', function() {
+          // Create a temporary input element
+          var tempInput = document.createElement('input');
+          tempInput.value = couponText.innerText;
+          document.body.appendChild(tempInput);
+          
+          // Select the text
+          tempInput.select();
+          tempInput.setSelectionRange(0, 99999); // For mobile devices
+          
+          // Execute the copy command
+          try {
+            var successful = document.execCommand('copy');
+            if (successful) {
+              message.innerHTML = "Coupon copied to clipboard!";
+              message.classList.add("success");
+            } else {
+              message.innerHTML = "Failed to copy. Please try selecting and copying manually.";
+              message.classList.add("error");
+            }
+          } catch (err) {
+            message.innerHTML = "Failed to copy. Please try selecting and copying manually.";
+            message.classList.add("error");
+          }
+          
+          // Remove the temporary input
+          document.body.removeChild(tempInput);
+          
+          // Reset message after 2 seconds
+          setTimeout(function() {
+            message.innerHTML = "Use this code at checkout{% if discount_value != blank %} for {{ discount_value }} off{% endif %}!";
+            message.classList.remove("success");
+            message.classList.remove("error");
+          }, 2000);
+        });
+      });
+    </script>
+  
+    <style>
+      .coupon-container {
+        margin: 20px 0;
+        padding: 15px;
+        border: 1px dashed #ccc;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        max-width: 400px;
+      }
+      
+      .coupon-container h3 {
+        margin-top: 0;
+        color: #333;
+      }
+      
+      .coupon-box {
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+      }
+      
+      #coupon-text {
+        background: #fff;
+        padding: 8px 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px 0 0 4px;
+        font-weight: bold;
+        flex-grow: 1;
+      }
+      
+      .copy-coupon {
+        background: #4a4a4a;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        cursor: pointer;
+        border-radius: 0 4px 4px 0;
+        transition: background 0.3s;
+      }
+      
+      .copy-coupon:hover {
+        background: #333;
+      }
+      
+      .coupon-message {
+        font-size: 0.9em;
+        margin: 5px 0 0;
+        color: #666;
+      }
+      
+      .coupon-message.success {
+        color: green;
+      }
+      
+      .coupon-message.error {
+        color: red;
+      }
+    </style>
+  {% endif %}

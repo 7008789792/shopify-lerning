@@ -1,108 +1,316 @@
-{{ 'slick.css' | asset_url | stylesheet_tag }}
-{{ 'slick-theme.css' | asset_url | stylesheet_tag }}
-{{ 'slick.js' | asset_url | script_tag }}
+<!-- Include Splide.js CSS and JS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
 
-
+<!-- Custom CSS for styling the carousels to exactly match the image -->
 <style>
-  .slick-prev:before, .slick-next:before{
-    color:#000;
+  /* Container styling */
+  .product-gallery {
+    max-width: 100%;
+    margin: 0 auto;
+    position: relative;
   }
-  .slick-prev:hover, .slick-prev:focus, .slick-next:hover, .slick-next:focus {
-    color: transparent;
-    outline: none;
-    background: #ffffffbf;
-}
-.slick-next, .slick-prev {
-    right: 25px;
-    background: #fff;
-    border-radius: 100px;
-    height: 40px;
+
+  /* Main carousel styling */
+  .main-carousel {
+    margin-bottom: 10px;
+  }
+
+  /* Arrow styling to exactly match the image */
+  .main-carousel .splide__arrow {
+    background: rgba(255, 255, 255, 0.75);
+    opacity: 1;
+    box-shadow: 0px 0px 18px rgba(0, 0, 0, 0.17);
     width: 40px;
-      box-shadow: 0px 0px 18px #0000002b;
-    }
-  .slick-next {
-    right: 25px;
-    }
-  .slick-prev {
-    left: 25px;
-        z-index: 999;
-}
-.slick-slide img {
-    width: 100%;
-}
-  .slick-initialized .slick-slide{
-    margin:10px;
+    height: 40px;
+    border-radius: 100px;
+    z-index: 5;
   }
-.slideshow-item p{
-  margin:0px;
-}
+
+  .main-carousel .splide__arrow svg {
+    fill: #000;
+    width: 1em;
+    height: 1em;
+  }
+
+  .main-carousel .splide__arrow:hover {
+    background: rgba(255, 255, 255, 0.9);
+  }
+
+  .main-carousel .splide__arrow--prev {
+    left: 25px;
+  }
+
+  .main-carousel .splide__arrow--next {
+    right: 25px;
+  }
+
+  /* Thumbnail carousel styling - exactly as in the image */
+  .thumbnail-carousel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 85px;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .thumbnail-carousel .splide__list {
+    flex-direction: column;
+    align-items: center;
+    height: auto !important;
+  }
+
+  .thumbnail-carousel .splide__slide {
+    width: 85px !important;
+    height: 85px !important;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+  }
+
+  #thumbnail-carousel .splide__slide.is-active {
+    opacity: 1;
+    border: 1px solid rgb(139, 94, 30);
+    border-radius: 8px;
+  }
+
+  /* This is to position the thumbnails on the left as in the image */
+  .thumbnail-carousel .splide__track {
+    height: 100%;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+  }
+
+  .thumbnail-carousel .splide__track::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+
+  /* Common styling for images in both carousels */
+  .carousel-slide img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  /* Thumbnails should be square like in the image */
+  .thumbnail-carousel .carousel-slide img {
+    object-fit: cover;
+    aspect-ratio: 1/1;
+  }
+
+  /* Vertical thumbnail layout as shown in the image */
+  .thumbnail-carousel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: auto;
+  }
+
+  .thumbnail-carousel .splide__track {
+    height: 100%;
+  }
+
+  .thumbnail-carousel .splide__list {
+    flex-direction: column;
+    height: auto;
+  }
+
+  /* Position main carousel to account for the thumbnail sidebar */
+  .main-carousel {
+    margin-left: 100px; /* Width of thumbnails + margin */
+  }
+
+  /* For fullscreen view button in the main image */
+  .fullscreen-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-radius: 3px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10;
+  }
+
+  .fullscreen-button svg {
+    width: 16px;
+    height: 16px;
+    fill: #333;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .main-carousel {
+      margin-left: 0;
+      margin-bottom: 100px;
+    }
+
+    .thumbnail-carousel {
+      position: relative;
+      height: auto;
+      margin-top: 10px;
+    }
+
+    .thumbnail-carousel .splide__list {
+      flex-direction: row;
+    }
+
+    .thumbnail-carousel .splide__slide {
+      width: 70px !important;
+      height: 70px !important;
+      margin: 5px;
+    }
+  }
 </style>
 
-
-<div class="container">
-  <div class="carousel-main">
-    {% for image in product.images %}
-      <div class="carousel-cell">
-  <img data-lazy="{{ image | img_url:''}}" />
-      </div>
-{% endfor %}
-      
-      
-      
+<!-- HTML Structure for the Gallery -->
+<div class="product-gallery">
+  <!-- Thumbnail Navigation Carousel - Placed first as shown in the image -->
+  <div id="thumbnail-carousel" class="splide thumbnail-carousel">
+    <div class="splide__track">
+      <ul class="splide__list">
+        {% for image in product.images %}
+          <li class="splide__slide carousel-slide">
+            <img
+              data-splide-lazy="{{ image | img_url: '200x200', crop: 'center' }}"
+              alt="{{ product.title }} - Thumbnail {{ forloop.index }}"
+              width="100%"
+              height="auto"
+            >
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
   </div>
-  <div class="carousel-nav">
-    {% for image in product.images %}
-      <div class="carousel-cell">
-  <img data-lazy="{{ image | img_url:'450x'}}" />
-      </div>
-{% endfor %}
-  </div>
 
+  <!-- Main Product Images Carousel -->
+  <div id="main-carousel" class="splide main-carousel">
+    <div class="splide__track">
+      <ul class="splide__list">
+        {% for image in product.images %}
+          <li class="splide__slide carousel-slide">
+            <img
+              data-splide-lazy="{{ image | img_url: 'master' }}"
+              alt="{{ product.title }} - Image {{ forloop.index }}"
+              width="100%"
+              height="auto"
+            >
+            <!-- Fullscreen button as shown in the image -->
+            <button class="fullscreen-button" aria-label="View fullscreen">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+              </svg>
+            </button>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
 </div>
+
+<!-- Script to initialize and configure the carousels -->
 <script>
- $('.carousel-main').slick({
-  slidesToShow: 1,
-  slidesToScroll: 1,
-  arrows: true,
-  fade: true,
-  asNavFor: '.carousel-nav',
-   lazyLoad: 'progressive',
-    adaptiveHeight: true
-});
-$('.carousel-nav').slick({
-  slidesToShow: 3,
-  slidesToScroll: 1,
-  asNavFor: '.carousel-main',
-  arrows: true,
-  centerMode: true,
-  focusOnSelect: true,
-  lazyLoad: 'progressive',
-   adaptiveHeight: true,
-  responsive: [
-    {
-      breakpoint: 1024,
-      settings: {
-        slidesToShow: 3,
-        slidesToScroll: 3,
-        infinite: true,
-        dots: true
-      }
-    },
-    {
-      breakpoint: 600,
-      settings: {
-        slidesToShow: 2,
-        slidesToScroll: 2
-      }
-    },
-    {
-      breakpoint: 480,
-      settings: {
-        slidesToShow: 2,
-        slidesToScroll:2
-      }
-    }
-  ]
-});
-		
+  document.addEventListener('DOMContentLoaded', function () {
+    // Create the main carousel
+    const mainCarousel = new Splide('#main-carousel', {
+      type: 'slide',
+      rewind: true,
+      speed: 1000,
+      perPage: 1,
+      perMove: 1,
+      gap: 0,
+      pagination: false,
+      arrows: true,
+      lazyLoad: 'nearby',
+      breakpoints: {
+        768: {
+          arrows: true,
+        },
+      },
+    });
+
+    // Create the thumbnail carousel with vertical layout as in the image
+    const thumbnailCarousel = new Splide('#thumbnail-carousel', {
+      direction: 'ttb', // Top to bottom - vertical layout
+      height: '100%',
+      width: '85px',
+      fixedWidth: 85,
+      fixedHeight: 85,
+      gap: 4,
+      rewind: true,
+      pagination: false,
+      isNavigation: true,
+      arrows: false, // No arrows on thumbnail carousel as in the image
+      lazyLoad: 'sequential',
+      focus: 0,
+      breakpoints: {
+        768: {
+          direction: 'ltr', // Left to right for mobile
+          height: 'auto',
+          width: '100%',
+          fixedWidth: 70,
+          fixedHeight: 70,
+          gap: 5,
+        },
+      },
+    });
+
+    // Sync the two carousels
+    mainCarousel.sync(thumbnailCarousel);
+
+    // Mount both carousels
+    mainCarousel.mount();
+    thumbnailCarousel.mount();
+
+    // Implement fullscreen functionality
+    const fullscreenButtons = document.querySelectorAll('.fullscreen-button');
+    fullscreenButtons.forEach((button) => {
+      button.addEventListener('click', function (e) {
+        e.preventDefault();
+        const slide = this.closest('.splide__slide');
+        const img = slide.querySelector('img');
+
+        if (img) {
+          // Here you would normally trigger a lightbox
+          // For this example, we'll just log it
+          console.log('Fullscreen view requested for:', img.src);
+
+          // If you have a lightbox library, you would activate it here
+          // For example with PhotoSwipe or Fancybox
+          // Example: lightbox.open(img.src);
+        }
+      });
+    });
+
+    // Update thumbnail active state when main slide changes
+    mainCarousel.on('moved', function (newIndex) {
+      const thumbnails = document.querySelectorAll('#thumbnail-carousel .splide__slide');
+
+      thumbnails.forEach((thumb, index) => {
+        if (index === newIndex) {
+          thumb.classList.add('is-active');
+
+          // Scroll to active thumbnail
+          requestAnimationFrame(() => {
+            thumb.scrollIntoView({
+              behavior: 'smooth',
+              block: 'nearest',
+            });
+          });
+        } else {
+          thumb.classList.remove('is-active');
+        }
+      });
+    });
+  });
 </script>

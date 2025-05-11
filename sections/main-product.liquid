@@ -77,7 +77,7 @@
     <div class="product product--{{ section.settings.media_size }} product--{{ section.settings.media_position }} product--{{ section.settings.gallery_layout }} product--mobile-{{ section.settings.mobile_thumbnails }} grid grid--1-col {% if product.media.size > 0 %}grid--2-col-tablet{% else %}product--no-media{% endif %}">
       <div class="grid__item product__media-wrapper">
         {% comment %} {% render 'product-media-gallery', variant_images: variant_images %} {% endcomment %}
-        {% include 'featured-thumbnails' %} 
+        {% include 'featured-thumbnails' %}
       </div>
       <div class="product__info-wrapper grid__item{% if settings.page_width > 1400 and section.settings.media_size == "small" %} product__info-wrapper--extra-padding{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
         <section
@@ -357,7 +357,10 @@
                                 </dt>
                                 <dd>
                                   <span class="price-per-item--current">
-                                    {{- 'products.product.volume_pricing.price_at_each_html' | t: price: variant_price -}}
+                                    {{-
+                                      'products.product.volume_pricing.price_at_each_html'
+                                      | t: price: variant_price
+                                    -}}
                                   </span>
                                 </dd>
                               </dl>
@@ -465,10 +468,170 @@
               {%- when 'variant_picker' -%}
                 {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
               {%- when 'buy_buttons' -%}
-                <div class="product-form__input product-form__input-line-item">
-                  <label for="line-item-property">Custom Property</label>
-                  <input type="text" id="line-item-property" name="properties[Custom Property]" placeholder="Enter custom property">
-                </div>
+                {% comment %}
+                  Add this code to your product.liquid template where you want the coupon to appear
+                {% endcomment %}
+
+                {% assign has_coupon = false %}
+                {% assign coupon_code = '' %}
+
+                {% for collection in product.collections %}
+                  {% if collection.metafields.custom.coupon_code != blank %}
+                    {% assign has_coupon = true %}
+                    {% assign coupon_code = collection.metafields.custom.coupon_code %}
+                    {% break %}
+                  {% endif %}
+                {% endfor %}
+
+                {% if has_coupon %}
+                  <div class="coupon-container">
+                    <h3>Special Offer <span id="discount-value-display"></span></h3>
+                    <div class="coupon-box">
+                      <span id="coupon-text">{{ coupon_code }}</span>
+                      <button class="copy-coupon" id="copy-button">Copy</button>
+                    </div>
+                    <p class="coupon-message" id="copy-message">Use this code at checkout for a discount!</p>
+                  </div>
+
+                  <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                      var copyButton = document.getElementById('copy-button');
+                      var couponText = document.getElementById('coupon-text');
+                      var message = document.getElementById('copy-message');
+                      var discountDisplay = document.getElementById('discount-value-display');
+                      var couponCode = '{{ coupon_code }}';
+
+                      // Fetch discount information
+                      fetchDiscountInfo(couponCode);
+
+                      function fetchDiscountInfo(code) {
+                        fetch('/apps/discount-info-proxy?code=' + code)
+                          .then((response) => response.json())
+                          .then((data) => {
+                            if (data && data.discount_type && data.value) {
+                              var discountText = '';
+                              if (data.discount_type === 'percentage') {
+                                discountText = data.value + '% OFF';
+                              } else if (data.discount_type === 'fixed_amount') {
+                                discountText = '$' + data.value + ' OFF';
+                              }
+
+                              if (discountText) {
+                                discountDisplay.textContent = '- ' + discountText;
+                                message.textContent = 'Use this code at checkout for ' + discountText + '!';
+                              }
+                            }
+                          })
+                          .catch((error) => console.error('Error fetching discount info:', error));
+                      }
+
+                      copyButton.addEventListener('click', function () {
+                        // Create a temporary input element
+                        var tempInput = document.createElement('input');
+                        tempInput.value = couponText.innerText;
+                        document.body.appendChild(tempInput);
+
+                        // Select the text
+                        tempInput.select();
+                        tempInput.setSelectionRange(0, 99999); // For mobile devices
+
+                        // Execute the copy command
+                        try {
+                          var successful = document.execCommand('copy');
+                          if (successful) {
+                            message.innerHTML = 'Coupon copied to clipboard!';
+                            message.classList.add('success');
+                          } else {
+                            message.innerHTML = 'Failed to copy. Please try selecting and copying manually.';
+                            message.classList.add('error');
+                          }
+                        } catch (err) {
+                          message.innerHTML = 'Failed to copy. Please try selecting and copying manually.';
+                          message.classList.add('error');
+                        }
+
+                        // Remove the temporary input
+                        document.body.removeChild(tempInput);
+
+                        // Reset message after 2 seconds
+                        setTimeout(function () {
+                          var defaultMessage = 'Use this code at checkout for a discount!';
+                          if (discountDisplay.textContent) {
+                            defaultMessage =
+                              'Use this code at checkout for ' + discountDisplay.textContent.trim() + '!';
+                          }
+                          message.innerHTML = defaultMessage;
+                          message.classList.remove('success');
+                          message.classList.remove('error');
+                        }, 2000);
+                      });
+                    });
+                  </script>
+
+                  <style>
+                    .coupon-container {
+                      margin: 20px 0;
+                      padding: 15px;
+                      border: 1px solid #ccc;
+                      border-radius: 8px;
+                      background-color: #f9f9f9;
+                      max-width: 400px;
+                    }
+
+                    .coupon-container h3 {
+                      margin-top: 0;
+                      color: #333;
+                    }
+
+                    .coupon-box {
+                      display: flex;
+                      align-items: center;
+                      margin: 10px 0;
+                    }
+
+                    #coupon-text {
+                      background: #fff;
+                      padding: 8px 15px;
+                      border: 1px solid #ddd;
+                      border-radius: 4px 0 0 4px;
+                      font-weight: bold;
+                      flex-grow: 1;
+                    }
+
+                    .copy-coupon {
+                      background: #4a4a4a;
+                      color: white;
+                      border: none;
+                      padding: 8px 15px;
+                      cursor: pointer;
+                      border-radius: 0 4px 4px 0;
+                      transition: background 0.3s;
+                    }
+
+                    .copy-coupon:hover {
+                      background: #333;
+                    }
+
+                    .coupon-message {
+                      font-size: 0.9em;
+                      margin: 5px 0 0;
+                      color: #666;
+                    }
+
+                    .coupon-message.success {
+                      color: green;
+                    }
+
+                    .coupon-message.error {
+                      color: red;
+                    }
+
+                    #discount-value-display {
+                      font-weight: bold;
+                      color: #e42e2e;
+                    }
+                  </style>
+                {% endif %}
                 {%- render 'buy-buttons',
                   block: block,
                   product: product,
@@ -1679,7 +1842,7 @@
         {
           "type": "header",
           "content": "t:sections.main-product.blocks.icon_with_text.settings.pairing_2.label"
-        },        
+        },
         {
           "type": "select",
           "id": "icon_2",
@@ -1879,7 +2042,7 @@
         {
           "type": "header",
           "content": "t:sections.main-product.blocks.icon_with_text.settings.pairing_3.label"
-        },        
+        },
         {
           "type": "select",
           "id": "icon_3",
@@ -2181,7 +2344,7 @@
       ],
       "default": "hide",
       "label": "t:sections.main-product.settings.mobile_thumbnails.label"
-    },    
+    },
     {
       "type": "select",
       "id": "media_position",
